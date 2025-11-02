@@ -35,7 +35,6 @@ cd ToDoList-Front
 npm install
 ng serve
 
----
 
 גרסאות בפריסה:
 
