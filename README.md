@@ -35,7 +35,9 @@ cd ToDoList-Front
 npm install
 ng serve
 
-גרסאות בפריסה (Deployment)
+---
+
+גרסאות בפריסה:
 
 🔗 Frontend (Netlify):
 https://soft-sunflower-91f2fa.netlify.app/
