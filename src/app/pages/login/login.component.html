@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="card auth-card">
+    <h1 class="title">{{ mode === 'login' ? 'Sign in' : 'Create account' }}</h1>
+
+    <form (ngSubmit)="submit()" class="form-stack">
+      <label class="field">
+        <span class="field-label">Email</span>
+        <input
+          class="input"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Password</span>
+        <input
+          class="input"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" [disabled]="busy">
+          {{ mode === 'login' ? 'Sign in' : 'Sign up' }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-ghost"
+          (click)="mode = mode === 'login' ? 'register' : 'login'"
+        >
+          {{ mode === 'login' ? "Don't have an account? Sign up" : 'Already have an account? Sign in' }}
+        </button>
+      </div>
+
+      <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+    </form>
+  </div>
+</div>

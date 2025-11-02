@@ -1,0 +1,86 @@
+<div class="board">
+  <aside class="sidebar card">
+    <div class="sidebar-header">
+      <h2>Lists</h2>
+      <div class="add-list">
+        <input class="input" [(ngModel)]="newListName" placeholder="New list name" />
+        <button class="btn btn-primary" (click)="addList()" [disabled]="busy || !newListName.trim()">Add</button>
+      </div>
+    </div>
+
+    <ul class="lists">
+      <li *ngFor="let l of lists" [class.active]="selected?._id===l._id" (click)="selectList(l)">
+        <div class="list-header">
+          <div class="list-name">{{ l.name }}</div>
+          <div class="badge" [class.viewonly]="!l.canWrite">
+            {{ l.canWrite ? 'owner' : ('shared by ' + l.ownerEmail) }}
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer" *ngIf="selected">
+      <button class="btn btn-ghost danger" (click)="deleteCurrentList()" [disabled]="busy || !selected?.canWrite">Delete list</button>
+    </div>
+
+    <div *ngIf="selected && selected.canWrite" class="share-box">
+      <button class="btn btn-primary" (click)="openShare()" *ngIf="!shareOpen">Share list</button>
+
+      <div *ngIf="shareOpen" class="share-row single">
+        <input type="email" class="input" placeholder="Friend's email" [(ngModel)]="shareEmail" />
+        <button class="btn btn-primary" (click)="shareSelected()" [disabled]="busyShare || !shareEmail">Share</button>
+      </div>
+
+      <div *ngIf="selected?.canWrite && selected?.members?.length">
+        <h4>Shared with</h4>
+        <ul class="members">
+          <li *ngFor="let m of selected.members" class="member-row">
+            <span>{{ m.email }}</span>
+            <button class="btn btn-ghost xs" (click)="unshareMember(m.user)">Remove</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <main class="panel card">
+    <div class="panel-header">
+      <h1 *ngIf="selected; else noSel">{{ selected?.name }}</h1>
+      <ng-template #noSel><h1>Select a list</h1></ng-template>
+
+      <div class="actions" *ngIf="selected">
+        <button
+          *ngIf="selected?.canWrite"
+          class="btn btn-ghost"
+          (click)="clearAll()
+          "
+          [disabled]="busy || !items.length"
+        >
+          Clear all
+        </button>
+
+        <button
+          *ngIf="!selected?.canWrite"
+          class="btn btn-ghost danger"
+          (click)="leaveList(selected!)"
+          [disabled]="busy"
+        >
+          Remove shared list
+        </button>
+      </div>
+    </div>
+
+    <div class="add-row" *ngIf="selected">
+      <input class="input" [(ngModel)]="newTitle" placeholder="Add a task…" [disabled]="busy || !selected?.canWrite" />
+      <button class="btn btn-primary" (click)="add()" [disabled]="busy || !newTitle.trim() || !selected?.canWrite">Add</button>
+    </div>
+
+    <div class="empty" *ngIf="selected && !items.length">No tasks yet</div>
+
+    <div class="todo-row" *ngFor="let item of items">
+      <input type="checkbox" [checked]="item.completed" (change)="toggle(item)" [disabled]="!selected?.canWrite" />
+      <div class="todo-title" [class.done]="item.completed">{{ item.title }}</div>
+      <button class="btn btn-ghost" (click)="remove(item)" [disabled]="!selected?.canWrite">Delete</button>
+    </div>
+  </main>
+</div>
